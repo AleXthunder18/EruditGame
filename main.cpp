@@ -37,6 +37,27 @@ int readNum(int min, int max)
     return num;
 }
 
+bool isFirstLettersSame(string& prevWord, string& nowWord)
+{
+    bool solution;
+
+    solution = (prevWord[0] == nowWord[0]);
+
+    return solution;
+}
+
+void addScoreCount(int*& playersScore, int numPlayer, string& nowWord, string& prevWord)
+{
+    if (isFirstLettersSame(prevWord, nowWord))
+
+        playersScore[numPlayer] += 2 * nowWord.length();
+
+    else
+
+        playersScore[numPlayer] += nowWord.length();
+
+}
+
 bool compareWordAndLettersBank(string& newWord, string*& playersBank, int numPlayer, bool& englishLanguage)
 {
     string workString;
