@@ -36,6 +36,39 @@ int readNum(int min, int max)
 
     return num;
 }
+
+bool compareWordAndLettersBank(string& newWord, string*& playersBank, int numPlayer, bool& englishLanguage)
+{
+    string workString;
+    bool isCorrect, solution;
+    int counter;
+
+    counter = 0;
+    workString = playersBank[numPlayer];
+
+    for (int i = 0; i < newWord.length(); i++)
+    {
+        isCorrect = false;
+        for (int j = 0; j < workString.length(); j++)
+            if (newWord[i] == workString[j])
+            {
+                isCorrect = true;
+                workString.erase(j, 1);
+                break;
+            }
+
+        if (isCorrect)
+            counter++;
+    }
+
+    if (counter == newWord.length())
+        solution = true;
+    else
+        solution = false;
+
+    return solution;
+}
+
 set<string> createPossibleVocabulary(bool& englishLanguage) {
 
     string path;
