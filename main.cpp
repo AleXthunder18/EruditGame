@@ -4,6 +4,7 @@
 #include <set>
 
 using namespace std;
+
 int readNum(int min, int max)
 {
     bool isIncorrect;
@@ -35,11 +36,20 @@ int readNum(int min, int max)
 
     return num;
 }
-set<string> createPossibleVocabulary() {
+set<string> createPossibleVocabulary(bool& englishLanguage) {
 
+    string path;
     set<string> vocabulary = {};
-    string path = "C:\\Users\\Рустамчик\\Desktop\\опишка\\input.txt";
+
+    if (englishLanguage) {
+        path = "..\\..\\englishvocabulary.txt";
+    }
+    else {
+        path = "..\\..\\russianvocabulary.txt";
+    }
+
     string word = "";
+
 
     ifstream fin(path);
     if (!fin.is_open()) {
@@ -53,6 +63,26 @@ set<string> createPossibleVocabulary() {
     fin.close();
 
     return vocabulary;
+
+}
+
+void addNewWord(string line, set<string>& vocabulary, bool& englishLanguage) {
+
+    string path;
+    string word = "";
+
+    if (englishLanguage) {
+        path = "..\\..\\englishvocabulary.txt";
+    }
+    else {
+        path = "..\\..\\russianvocabulary.txt";
+    }
+
+    ofstream fout(path, fstream::app);
+    fout << "\n" << line;
+    fout.close();
+
+    vocabulary.insert({ line });
 
 }
 string getLetterBank()
