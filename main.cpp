@@ -345,10 +345,10 @@ void addNewWord(string line, set<string>& vocabulary, bool& englishLanguage) {
     string word = "";
 
     if (englishLanguage) {
-        path = "..\\..\\englishvocabulary.txt";
+        path = "..\\englishvocabulary.txt";
     }
     else {
-        path = "..\\..\\russianvocabulary.txt";
+        path = "..\\russianvocabulary.txt";
     }
 
     ofstream fout(path, fstream::app);
@@ -468,6 +468,7 @@ int main() {
             {
                 addScoreCount(playersScore, i, nowWord, prevWord);
                 deleteLettersFromPlayersBank(nowWord, playersBank, i);
+                getPlayersBank(playersBank, letterBank, playersCount);
             }
             else
             {
@@ -479,6 +480,7 @@ int main() {
                     addNewWord(nowWord, possibleVocabulary, englishLanguage);
                     addScoreCount(playersScore, i, nowWord, prevWord);
                     deleteLettersFromPlayersBank(nowWord, playersBank, i);
+                    getPlayersBank(playersBank, letterBank, playersCount);
                 }
                 else
                 {
