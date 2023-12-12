@@ -5,12 +5,91 @@
 
 using namespace std;
 
+<<<<<<< HEAD
 int readNum(int min, int max);
 int getPlayersCount();
 void addNewWord(const bool englishLanguage, set<string>& vocalbulary, string word);
 string readPlayersString(const bool englishLanguage);
 bool voiting(const bool englishLanguage, const int ammountPlayers, const string word, set<string>& vocabulary);
 bool compareWordAndVocabulary(const bool englishLanguage, const int playersCount, set<string>& vocabulary, const string word);
+=======
+void replaceFiveLetters(string& playerBank, string& letterBank, bool englishLanguage)
+{
+    string changedLetters;
+    bool isNotCorrect;
+    cout << "Введите 5 букв, которые хотите заменить (в строку, без пробелов):\n";
+    do {
+        isNotCorrect = false;
+        getline(cin, changedLetters);
+        if (changedLetters.length() == 5)
+            for (int i = 0; i < 5; i++) {
+                changedLetters[i] = tolower(changedLetters[i]);
+                if (englishLanguage == true)
+                    if (!(changedLetters[i] >= 97 && changedLetters[i] <= 122)) {
+                        cout << "Некорректный ввод! Повторите попытку:\n";
+                        isNotCorrect = true;
+                        break;
+                    }
+                if (englishLanguage == false)
+                    if (!(changedLetters[i] <= -1 && changedLetters[i] >= -32)) {
+                        cout << "Некорректный ввод! Повторите попытку:\n";
+                        isNotCorrect = true;
+                        break;
+                    }
+            }
+        else {
+            cout << "Вы должны ввести 5 букв! Повторите ввод:\n";
+            isNotCorrect = true;
+        }
+        if (!isNotCorrect) {
+            isNotCorrect = !checkIncludeLetters(playerBank, changedLetters);
+            if (isNotCorrect) {
+                cout << "Введите буквы, содержащиеся в вашем банке! Повторите ввод:\n";
+            }
+        }
+    } while (isNotCorrect);
+    changeFiveLetters(playerBank, letterBank, changedLetters);
+}
+
+void changeFiveLetters(string& playerBank, string& letterBank, string& changedLetters)
+{
+    int position;
+    for (int i = 0; i < 5; i++)
+        for (int j = 0; j < playerBank.length(); j++)
+            if (changedLetters[i] == playerBank[j]) {
+                playerBank.erase(j, 1);
+                break;
+            }
+    for (int i = 0; i < 5; i++) {
+        position = rand() % letterBank.length();
+        playerBank = playerBank + letterBank[position];
+        letterBank.erase(position, 1);
+    }
+}
+
+bool checkIncludeLetters(string playerBank, string& changedLetters)
+{
+    int i, j;
+    bool isCorrect, isNotInclude;
+    i = 0;
+    isCorrect = true;
+    while (isCorrect && (i < changedLetters.length())) {
+        isNotInclude = true;
+        j = 0;
+        while (isNotInclude && (j < playerBank.length())) {
+            if (changedLetters[i] == playerBank[j]) {
+                playerBank.erase(j, 1);
+                isNotInclude = false;
+            }
+            j++;
+        }
+        if (isNotInclude)
+            isCorrect = false;
+        i++;
+    }
+    return isCorrect;
+}
+>>>>>>> Vergil
 
 int readNum(int min, int max)
 {
@@ -285,16 +364,6 @@ string getLetterBank()
     string letterBank = "QQQQWWWWEEEEEEEERRRRTTTTYYYYYYYYUUUUUUUUIIIIIIIIOOOOOOOOPPPPAAAAAAAASSSSDDDDFFFFGGGGHHHHJJJJKKKKLLLLZZZZXXXXCCCCVVVVBBBBNNNNMMMM";
     return letterBank;
 }
-/*string getPlayersLetterSet(string& bankLetters) {
-    string playerSet;
-    int position;
-    for (int i = 0; i < 10; i++) {
-        position = rand() % bankLetters.length();
-        playerSet = playerSet + bankLetters[position];
-        bankLetters.erase(position,1);
-    }
-    return playerSet;
-}*/
 
 void getPlayersLetterSet(string& bankLetters, string& playerSet) {
     int position, getLetterCount;
