@@ -2,6 +2,8 @@
 #include <ctime>
 #include <fstream>
 #include <set>
+#include <cctype>
+#include <windows.h>
 
 using namespace std;
 
@@ -160,7 +162,7 @@ string readPlayersString(const bool englishLanguage) {
         }
         else
         {
-            for (char c : str)
+          /*  for (char c : str)
             {
 
                 if ((c >= 'А' && c <= 'Я') || (c >= 'а' && c <= 'я'))
@@ -171,15 +173,16 @@ string readPlayersString(const bool englishLanguage) {
                     cout << "Ошибка ввода, попробуйте снова" << endl;
                     break;
                 }
-            }
+            }*/
         }
     } while (!isStrCorrect);
     return str;
 }
 
-void subtractScoreCount(int*& playersScore, int numPlayer, string word)
+void subtractScoreCount(int*& playersScore, int numPlayer, string nowWord)
 {
-    playersScore[numPlayer] += word.length();
+    cout << "Количество очков уменьшено на " << nowWord.length() << endl;
+    playersScore[numPlayer] -= nowWord.length();
 }
 
 bool voiting(const bool englishLanguage , const int ammountPlayers,const string word, set<string>& vocabulary)
@@ -232,14 +235,15 @@ bool isFirstLettersSame(string& prevWord, string& nowWord)
 
 void addScoreCount(int*& playersScore, int numPlayer, string& nowWord, string& prevWord)
 {
-    if (isFirstLettersSame(prevWord, nowWord))
-
+    if (isFirstLettersSame(prevWord, nowWord)) {
+        cout << "Количество очков увеличено на " << 2 * nowWord.length() << endl;
         playersScore[numPlayer] += 2 * nowWord.length();
-
+    }
     else
-
+    {
+        cout << "Количество очков увеличено на " << nowWord.length() << endl;
         playersScore[numPlayer] += nowWord.length();
-
+    }
 }
 
 bool compareWordAndLettersBank(string& newWord, string*& playersBank, int numPlayer, bool& englishLanguage)
@@ -292,7 +296,7 @@ bool isPlayersBankNotEmpty(string* playersBank, int numPlayer)
     return solution;
 }
 
-void deleteLettersFromPlayersBank(string word, string* playersBank, int numPlayer)
+void deleteLettersFromPlayersBank(string word, string* &playersBank, int numPlayer)
 {
     for (int i = 0; i < word.length(); i++)
         for (int j = 0; j < playersBank[numPlayer].length(); j++)
@@ -310,10 +314,10 @@ set<string> createPossibleVocabulary(bool& englishLanguage) {
     set<string> vocabulary = {};
 
     if (englishLanguage) {
-        path = "..\\..\\englishvocabulary.txt";
+        path = "..\\englishvocabulary.txt";
     }
     else {
-        path = "..\\..\\russianvocabulary.txt";
+        path = "..\\russianvocabulary.txt";
     }
 
     string word = "";
@@ -359,10 +363,15 @@ void lowcase(string& word) {
         c = tolower(c);
     }
 }
-string getLetterBank()
+
+string getLetterBank(const bool englishLanguage)
 {
-    string letterBank = "QQQQWWWWEEEEEEEERRRRTTTTYYYYYYYYUUUUUUUUIIIIIIIIOOOOOOOOPPPPAAAAAAAASSSSDDDDFFFFGGGGHHHHJJJJKKKKLLLLZZZZXXXXCCCCVVVVBBBBNNNNMMMM";
-    return letterBank;
+    string LetterBank;
+    if (englishLanguage)
+        LetterBank = "qqqqwwwweeeeeeeerrrrttttyyyyyyyyuuuuuuuuiiiiiiiiooooooooppppaaaaaaaassssddddffffgggghhhhjjjjkkkkllllzzzzxxxxccccvvvvbbbbnnnnmmmm";
+    else
+        LetterBank = "ЙЙЙЙЦЦЦЦУУУУУУУУУККККЕЕЕЕЕЕЕЕННННГГГГШШШШЩЩЩЩЗЗЗЗХХХХЪЪЪЪФФФФЫЫЫЫЫЫЫЫВВВВААААААААППППРРРРООООООООЛЛЛЛДДДДЖЖЖЖЭЭЭЭЭЭЭЭЯЯЯЯЯЯЯЯЧЧЧЧССССММММИИИИИИИИТТТТЬЬЬЬББББЮЮЮЮЮЮЮЮ";
+    return LetterBank;
 }
 
 void getPlayersLetterSet(string& bankLetters, string& playerSet) {
@@ -375,14 +384,10 @@ void getPlayersLetterSet(string& bankLetters, string& playerSet) {
     }
 }
 
-string* getPlayersBank(string& letterBank, int quantityPlayers)
+void getPlayersBank(string* &playersBank, string& letterBank, int quantityPlayers)
 {
-    string* giveLetters = new string[quantityPlayers];
-
     for (int i = 0; i < quantityPlayers; i++)
-        giveLetters[i] = getPlayersLetterSet(letterBank);
-
-    return giveLetters;
+        getPlayersLetterSet(letterBank, playersBank[i]);
 }
 void outputPlayersBank(string* playersBank, int ammountPlayers)
 {
@@ -401,18 +406,26 @@ void enterGameLanguage(bool &englishLanguage)
     englishLanguage = choice;
 }
 
+void outputPlayersScore(int* playersScore, int ammountPlayers)
+{
+    for (int i = 0; i < ammountPlayers; i++)
+    {
+        cout << "Количество очков" << i + 1 << " игрока: " << playersScore[i] << endl;
+    }
+}
 
 int main() {
-    int playersCount, numPlayer;
+    int playersCount;
     bool englishLanguage;
-    string letterBank, nowWord, prevWord;
+    string letterBank;
     string* playersBank;
     int* playersScore;
     set<string> possibleVocabulary;
 
+    SetConsoleOutputCP(CP_UTF8);
     srand(time(0));
 
-    printCondition();// вывели условие (нужно прописать, что есть возможность юзать 50\50 по команде ... и помощь друга по команде ...)
+//    printCondition();// вывели условие (нужно прописать, что есть возможность юзать 50\50 по команде ... и помощь друга по команде ...)
     enterGameLanguage(englishLanguage);// установили язык игры
     possibleVocabulary = createPossibleVocabulary(englishLanguage);//загрузили словарь на языке игры
     letterBank = getLetterBank(englishLanguage);//создали общий банк букв
@@ -420,12 +433,48 @@ int main() {
     playersScore = new int[playersCount];//создали массив со счетчиком очков каждого игрока
     playersBank = new string[playersCount];//создали массив с личным банком букв каждого игрока
     initializeScoreCount(playersScore, playersCount); //занулили счетчик очков
-    playersBank = getPlayersBank(letterBank, playersCount); //заполнили личный банк букв каждого игрока
-    outputPlayersBank(playersBank, playersCount);//вывели текущее состояние банков букв каждого игрока
+    getPlayersBank(playersBank, letterBank, playersCount); //заполнили личный банк букв каждого игрока
+
     //ход игры
+    string nowWord, prevWord = ".";
+
     for (int i = 0; i < playersCount; i++)
     {
+        outputPlayersBank(playersBank, playersCount);//вывели текущее состояние банков букв каждого игрока
+        cout << "Игрок " << i + 1 << ", введите ваше слово:" << endl;
+        nowWord = readPlayersString(englishLanguage);//ввод слова игроком
+        //начисление очков
+        if (compareWordAndLettersBank(nowWord, playersBank, i, englishLanguage))
+        {
+            if (compareWordAndVocabulary(englishLanguage, playersCount, possibleVocabulary, nowWord))
+            {
+                addScoreCount(playersScore, i, nowWord, prevWord);
+                deleteLettersFromPlayersBank(nowWord, playersBank, i);
+            }
+            else
+            {
+                cout << "Такого слова нет в словаре" << endl;
+                cout << "Будет проведен опрос, знают ли ваши соперники это слово" << endl;
+                if (voiting(englishLanguage, playersCount, nowWord, possibleVocabulary))
+                {
+                    cout << "Слово добавлено в словарь" << endl;
+                    addNewWord(nowWord, possibleVocabulary, englishLanguage);
+                    addScoreCount(playersScore, i, nowWord, prevWord);
+                    deleteLettersFromPlayersBank(nowWord, playersBank, i);
+                }
+                else
+                {
+                    subtractScoreCount(playersScore, i, nowWord);
+                }
+            }
+        }
+        else
+        {
+            cout << "В слове присутствуют буквы, которых нет в вашем наборе букв" << endl;
+            subtractScoreCount(playersScore, i, nowWord);
+        }
 
+        outputPlayersScore(playersScore, playersCount);
     }
 
 
