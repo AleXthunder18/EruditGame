@@ -172,47 +172,42 @@ void outputPlayersBank(string* playersBank, int ammountPlayers)
 
 }
 
-bool checkStringInput(const string& str) {
-    for (char c : str) {
-
-        if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z')) {
-            continue;
-        }
-        else {
-            return false;
-        }
-    }
-    return true;
+void enterGameLanguage(bool &englishLanguage)
+{
+    int choice;
+    cout << "Выберите язык игры:\n0 - русский\n1 - английский" << endl;
+    choice = readNum(0,1);
+    englishLanguage = choice;
 }
-bool checkIsWordCorrect(string& playerWord, string* playersBank, int playersNumber) {
-    bool isCorrect;
-    string workingString;
-    int lengthStr, counter;
 
-    counter = 0;
-
-    workingString = playersBank[playersNumber];
-
-    for (int i = 0; i < playerWord.length(); i++) {
-        isCorrect = false;
-        for (int j = 0; j < playerWord.length(); j++)
-            if (playerWord[i] == workingString[j]) {
-                isCorrect = true;
-                workingString.erase(j, 1);
-                break;
-            }
-        if (isCorrect)
-            counter++;
-
-    }
-    if (counter == playerWord.length()) {
-        for (int i = 0; i < playerWord.length(); i++)
-            for (int j = 0; j < playersBank[playersNumber].length(); j++);
-    }
-}
 
 int main() {
+    int playersCount, numPlayer;
+    bool englishLanguage;
+    string letterBank, nowWord, prevWord;
+    string* playersBank;
+    int* playersScore;
+    set<string> possibleVocabulary;
+
     srand(time(0));
-    std::cout << "Hello, World!" << std::endl;
+
+    printCondition();// вывели условие (нужно прописать, что есть возможность юзать 50\50 по команде ... и помощь друга по команде ...)
+    enterGameLanguage(englishLanguage);// установили язык игры
+    possibleVocabulary = createPossibleVocabulary(englishLanguage);//загрузили словарь на языке игры
+    letterBank = getLetterBank(englishLanguage);//создали общий банк букв
+    playersCount = getPlayersCount(); // ввели количество игроков
+    playersScore = new int[playersCount];//создали массив со счетчиком очков каждого игрока
+    playersBank = new string[playersCount];//создали массив с личным банком букв каждого игрока
+    initializeScoreCount(playersScore, playersCount); //занулили счетчик очков
+    playersBank = getPlayersBank(letterBank, playersCount); //заполнили личный банк букв каждого игрока
+    outputPlayersBank(playersBank, playersCount);//вывели текущее состояние банков букв каждого игрока
+    //ход игры
+    for (int i = 0; i < playersCount; i++)
+    {
+
+    }
+
+
+
     return 0;
 }
