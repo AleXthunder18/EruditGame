@@ -5,6 +5,13 @@
 
 using namespace std;
 
+int readNum(int min, int max);
+int getPlayersCount();
+void addNewWord(const bool englishLanguage, set<string>& vocalbulary, string word);
+string readPlayersString(const bool englishLanguage);
+bool voiting(const bool englishLanguage, const int ammountPlayers, const string word, set<string>& vocabulary);
+bool compareWordAndVocabulary(const bool englishLanguage, const int playersCount, set<string>& vocabulary, const string word);
+
 int readNum(int min, int max)
 {
     bool isIncorrect;
@@ -35,6 +42,98 @@ int readNum(int min, int max)
     while (isIncorrect);
 
     return num;
+}
+
+int getPlayersCount()
+{
+    cout << "Введите количество игроков" << endl;
+    int playersCount = readNum(2, 6);
+    return playersCount;
+}
+
+void addNewWord(const bool englishLanguage, set<string>& vocalbulary,string word)
+{
+    vocalbulary.insert(word);
+}
+
+string readPlayersString(const bool englishLanguage) {
+    bool isStrCorrect;
+    string str;
+    do
+    {
+        isStrCorrect = true;
+        cout << "Введите слово" << endl;
+        getline(cin,str);
+        if (englishLanguage)
+        {
+            for (char c : str)
+            {
+
+                if ((c >= 'A' && c <= 'Z') || (c >= 'a' && c <= 'z'))
+                    continue;
+                else
+                {
+                    isStrCorrect = false;
+                    cout << "Ошибка ввода, попробуйте снова" << endl;
+                    break;
+                }
+            }
+        }
+        else
+        {
+            for (char c : str)
+            {
+
+                if ((c >= 'А' && c <= 'Я') || (c >= 'а' && c <= 'я'))
+                    continue;
+                else
+                {
+                    isStrCorrect = false;
+                    cout << "Ошибка ввода, попробуйте снова" << endl;
+                    break;
+                }
+            }
+        }
+    } while (!isStrCorrect);
+    return str;
+}
+
+void subtractScoreCount(int*& playersScore, int numPlayer, string word)
+{
+    playersScore[numPlayer] += word.length();
+}
+
+bool voiting(const bool englishLanguage , const int ammountPlayers,const string word, set<string>& vocabulary)
+{
+    int yesCount = 0;
+    int noCount = 0;
+    for (int i = 0; i < ammountPlayers; i++)
+    {
+        cout << i + 1 << "игрок" << "проголосуйте/n" << "0.Нет/n" << "1.Да" << endl;
+        int choice = readNum(0,1);
+        if (choice)
+            yesCount++;
+        else
+            noCount++;
+    }
+    if (yesCount >= noCount)
+    {
+        addNewWord(englishLanguage, vocabulary, word);
+        return true;
+    }
+    else
+        return false;
+
+}
+
+bool compareWordAndVocabulary(const bool englishLanguage, const int playersCount,set<string>& vocabulary,const string word)
+{
+    bool isWordReal;
+    if (vocabulary.count(word) > 0)
+        isWordReal = true;
+    else
+        isWordReal = voiting(englishLanguage, playersCount, word, vocabulary);
+    return isWordReal;
 }
 
 void initializeScoreCount(int*& playersScore, int ammountPlayers)
@@ -174,6 +273,12 @@ void addNewWord(string line, set<string>& vocabulary, bool& englishLanguage) {
 
     vocabulary.insert({ line });
 
+}
+
+void lowcase(string& word) {
+    for (char& c : word) {
+        c = tolower(c);
+    }
 }
 string getLetterBank()
 {
