@@ -150,7 +150,7 @@ string getLetterBank()
     string letterBank = "QQQQWWWWEEEEEEEERRRRTTTTYYYYYYYYUUUUUUUUIIIIIIIIOOOOOOOOPPPPAAAAAAAASSSSDDDDFFFFGGGGHHHHJJJJKKKKLLLLZZZZXXXXCCCCVVVVBBBBNNNNMMMM";
     return letterBank;
 }
-string getPlayersLetterSet(string &bankLetters) {
+/*string getPlayersLetterSet(string& bankLetters) {
     string playerSet;
     int position;
     for (int i = 0; i < 10; i++) {
@@ -159,7 +159,18 @@ string getPlayersLetterSet(string &bankLetters) {
         bankLetters.erase(position,1);
     }
     return playerSet;
+}*/
+
+void getPlayersLetterSet(string& bankLetters, string& playerSet) {
+    int position, getLetterCount;
+    getLetterCount = 10 - playerSet.length();
+    for (int i = 0; (i < getLetterCount) && (bankLetters.length() != 0); i++) {
+        position = rand() % bankLetters.length();
+        playerSet = playerSet + bankLetters[position];
+        bankLetters.erase(position, 1);
+    }
 }
+
 string* getPlayersBank(string& letterBank, int quantityPlayers)
 {
     string* giveLetters = new string[quantityPlayers];
