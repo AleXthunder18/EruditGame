@@ -96,6 +96,36 @@ bool compareWordAndLettersBank(string& newWord, string*& playersBank, int numPla
     return solution;
 }
 
+bool isLettersCountInPlayersBankMoreThanFive(string* playersBank, int numPlayer)
+{
+    bool solution;
+
+    solution = (playersBank[numPlayer].length() > 5);
+
+    return solution;
+}
+
+bool isPlayersBankNotEmpty(string* playersBank, int numPlayer)
+{
+    bool solution;
+
+    solution = (playersBank[numPlayer].length() > 0);
+
+    return solution;
+}
+
+void deleteLettersFromPlayersBank(string word, string* playersBank, int numPlayer)
+{
+    for (int i = 0; i < word.length(); i++)
+        for (int j = 0; j < playersBank[numPlayer].length(); j++)
+            if (word[i] == playersBank[numPlayer][j])
+
+            {
+                playersBank[numPlayer].erase(j, 1);
+
+            }
+}
+
 set<string> createPossibleVocabulary(bool& englishLanguage) {
 
     string path;
