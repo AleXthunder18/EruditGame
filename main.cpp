@@ -37,6 +37,12 @@ int readNum(int min, int max)
     return num;
 }
 
+void initializeScoreCount(int*& playersScore, int ammountPlayers)
+{
+    for (int i = 0; i < ammountPlayers; i++)
+        playersScore[i] = 0;
+}
+
 bool isFirstLettersSame(string& prevWord, string& nowWord)
 {
     bool solution;
