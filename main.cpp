@@ -304,6 +304,7 @@ void deleteLettersFromPlayersBank(string word, string* &playersBank, int numPlay
 
             {
                 playersBank[numPlayer].erase(j, 1);
+                break;
 
             }
 }
@@ -358,9 +359,26 @@ void addNewWord(string line, set<string>& vocabulary, bool& englishLanguage) {
 
 }
 
-void lowcase(string& word) {
+void lowcase(string& word) 
+{
     for (char& c : word) {
         c = tolower(c);
+    }
+}
+
+void lowcaseRussian(string& word)
+{
+    for (char& c : word)
+    {
+        if ((c < -32) && (c > -65))
+        {
+            c = c + 32;
+        }
+
+        if (c == -88)
+        {
+            c = -72;
+        }
     }
 }
 
