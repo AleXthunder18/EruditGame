@@ -8,7 +8,6 @@
 using namespace std;
 
 void changeFiveLetters(string& playerBank, string& letterBank, string& changedLetters);
-//bool checkIncludeLetters(string playerBank, string& changedLetters);
 int readNum(int min, int max);
 int getPlayersCount();
 string readPlayersString(const bool englishLanguage);
@@ -31,6 +30,7 @@ void outputPlayersBank(string* playersBank, int ammountPlayers);
 void enterGameLanguage(bool& englishLanguage);
 void outputPlayersScore(int* playersScore, int ammountPlayers);
 
+
 void changeFiveLetters(string& playerBank, string& letterBank, string& changedLetters)
 {
     int position;
@@ -46,29 +46,6 @@ void changeFiveLetters(string& playerBank, string& letterBank, string& changedLe
         letterBank.erase(position, 1);
     }
 }
-
-/*bool checkIncludeLetters(string playerBank, string& changedLetters)
-{
-    int i, j;
-    bool isCorrect, isNotInclude;
-    i = 0;
-    isCorrect = true;
-    while (isCorrect && (i < changedLetters.length())) {
-        isNotInclude = true;
-        j = 0;
-        while (isNotInclude && (j < playerBank.length())) {
-            if (changedLetters[i] == playerBank[j]) {
-                playerBank.erase(j, 1);
-                isNotInclude = false;
-            }
-            j++;
-        }
-        if (isNotInclude)
-            isCorrect = false;
-        i++;
-    }
-    return isCorrect;
-}*/
 
 int readNum(int min, int max)
 {
@@ -104,7 +81,7 @@ int readNum(int min, int max)
 
 int getPlayersCount()
 {
-    cout << "Введите количество игроков" << endl;
+    cout << "Введите количество игроков от 2 до 6" << endl;
     int playersCount = readNum(2, 6);
     return playersCount;
 }
@@ -117,7 +94,7 @@ void subtractScoreCount(int*& playersScore, int numPlayer, string nowWord)
     playersScore[numPlayer] -= nowWord.length();
 }
 
-bool voiting(const bool englishLanguage , const int ammountPlayers,const string word, set<string>& vocabulary, int numPlayers)
+bool voiting(const bool englishLanguage, const int ammountPlayers, const string word, set<string>& vocabulary, int numPlayers)
 {
     int yesCount = 0;
     int noCount = 0;
@@ -161,7 +138,7 @@ bool isFirstLettersSame(string& prevWord, string& nowWord)
 {
     bool solution;
 
-    solution = (prevWord[0] == nowWord[0]);
+    solution = (prevWord[prevWord.length()-1] == nowWord[0]);
 
     return solution;
 }
@@ -169,7 +146,7 @@ bool isFirstLettersSame(string& prevWord, string& nowWord)
 void addScoreCount(int*& playersScore, int numPlayer, string& nowWord, string& prevWord)
 {
     if (isFirstLettersSame(prevWord, nowWord)) {
-        cout << "Количество очков увеличено на " << 2 * nowWord.length() << endl;
+        cout << "Очки удваиваются! Количество очков увеличено на " << 2 * nowWord.length() << endl;
         playersScore[numPlayer] += 2 * nowWord.length();
     }
     else
@@ -327,6 +304,8 @@ void outputPlayersBank(string* playersBank, int ammountPlayers)
     {
         cout << "Банк букв " << i + 1 << " игрока: " << playersBank[i] << endl;
     }
+    cout << endl;1
+
 
 }
 
@@ -377,12 +356,12 @@ void useFiftyFiftyBonus(string*& playersBank, int numPlayer, string& letterBank,
             if (compareWordAndLettersBank(changedLetters, playersBank, numPlayer, englishLanguage)) {
                 changeFiveLetters(playersBank[numPlayer], letterBank, changedLetters);
             } else {
-                cout << "В вашем наборе нет такой комбинации букв. Повторите ввод.";
+                cout << "В вашем наборе нет такой комбинации букв. Повторите ввод." << endl;
                 isNotCorrect = true;
             }
         }
         else {
-            cout << "Вы должны ввести 5 букв! Повторите ввод:\n";
+            cout << "Вы должны ввести 5 букв! Повторите ввод:" << endl;
             isNotCorrect = true;
         }
     } while (isNotCorrect);
@@ -541,6 +520,26 @@ string readPlayersString(const bool englishLanguage)
     } while (!isStrCorrect);
     return str;
 }
+void printCondition()
+{
+    cout << "Игра ЭРУДИТ" << endl;
+    cout << "Количество игроков - от 2 до 6" << endl;
+    cout << "В начале игры для каждого игрока формируется персональный набор из 10 случайных букв" << endl;
+    cout << "Задача игроков - составить из этих букв слово" << endl;
+    cout << endl;
+    cout << "Если слово правильное - игроку будет добавлено столько очков, сколько букв в его слове" << endl;
+    cout << "Если при этом первые буквы введенного слова и слова предыдущего игрока совпадают - начисляемые очки удваиваются" << endl;
+    cout << "Если слово не состоит из букв набора игрока - количество очков игрока уменьшается на количество букв в веденном слове" << endl;
+    cout << "Если слово не найдено в словаре - будет проведен опрос, знают ли ваши соперники это слово" << endl;
+    cout << endl;
+    cout << "Игрок может воспользоваться 2 бонусами за игру:" << endl;
+    cout << "Бонус \"Помощь друга\" (команда /helpme) - игрок может заменить свою букву на любую букву из набора другого игрока" << endl;
+    cout << "Бонус \"50/50\" (команда /fifty-fifty) - игрок может заменить 5 выбранных букв своего набора на 5 случайных букв из банка букв, при этом игрок теряет 2 очка" << endl;
+    cout << endl;
+    cout << "Если игрок не может придумать слово - он может пропустить ход, нажав клавишу ENTER" << endl;
+    cout << "Игра ведется до тех пор, пока все игроки не пропустят ход" << endl;
+    cout << "Победителем считается игрок, набравший наибольшее количество очков" << endl;
+}
 int main() {
     int playersCount, skipCount;
     bool englishLanguage;
@@ -553,7 +552,9 @@ int main() {
     //system("chcp 1251 > nul");
     srand(time(0));
 
-//    printCondition();// вывели условие (нужно прописать, что есть возможность юзать 50\50 по команде ... и помощь друга по команде ...)
+
+
+    printCondition();// вывели условие (нужно прописать, что есть возможность юзать 50\50 по команде ... и помощь друга по команде ...)
     enterGameLanguage(englishLanguage);// установили язык игры
     cout << "загрузка словаря..." << endl;
     possibleVocabulary = createPossibleVocabulary(englishLanguage);//загрузили словарь на языке игры
@@ -640,6 +641,7 @@ int main() {
                 cout << "В слове присутствуют буквы, которых нет в вашем наборе букв" << endl;
                 subtractScoreCount(playersScore, i, nowWord);
             }
+            prevWord = nowWord;
 
             cout << endl;
             outputPlayersScore(playersScore, playersCount);
@@ -652,7 +654,12 @@ int main() {
     cout << "ПОБЕДИТЕЛЬ - ИГРОК " << winnerNum + 1 << "!!!" << endl;
     cout << "Количество очков - " << playersScore[winnerNum] << endl;
 
-
-
     return 0;
 }
+
+
+
+
+
+
+
